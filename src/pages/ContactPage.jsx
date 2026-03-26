@@ -19,12 +19,12 @@ export const ContactPage = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@webocore.com',
+      value: 'webocore@gmail.com',
     },
     {
       icon: Phone,
       label: 'Phone',
-      value: '+91 XXXX XXXX XX',
+      value: '+91 8877 9984 83',
     },
     {
       icon: MapPin,
