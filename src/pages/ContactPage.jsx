@@ -14,6 +14,32 @@ export const ContactPage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 5) {
+      newErrors.message = 'Message must be at least 5 characters';
+    } else if (formData.message.length > 5000) {
+      newErrors.message = 'Message cannot exceed 5000 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const contactInfo = [
     {
@@ -43,17 +69,30 @@ export const ContactPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    console.log("SENDING DATA 🔥:", formData);
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
     try {
-      await contactAPI.submitForm(formData);
+      await contactAPI.submitForm({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
       setSubmitStatus('success');
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setErrors({});
 
       setTimeout(() => setSubmitStatus(null), 3000);
     } catch (error) {
-      setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus(null), 3000);
+      const errorMsg = error.response?.data?.message || 'Something went wrong. Please try again.';
+      setSubmitStatus({ type: 'error', message: errorMsg });
+      setTimeout(() => setSubmitStatus(null), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -115,32 +154,38 @@ export const ContactPage = () => {
               </div>
             )}
 
-            {submitStatus === 'error' && (
+            {submitStatus?.type === 'error' && (
               <div className="mb-6 p-4 bg-red-900/20 border border-red-500 rounded-lg text-red-400">
-                Something went wrong. Please try again.
+                {submitStatus.message}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                />
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+                </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -162,15 +207,19 @@ export const ContactPage = () => {
                 />
               </div>
 
-              <textarea
-                name="message"
-                placeholder="Your Message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                rows="6"
-                className="input-field resize-none"
-              />
+              <div>
+                <textarea
+                  name="message"
+                  placeholder="Your Message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows="6"
+                  className="input-field resize-none"
+                />
+                {errors.message && <p className="text-red-400 text-sm mt-1">{errors.message}</p>}
+                <p className="text-slate-400 text-sm mt-1">{formData.message.length}/5000</p>
+              </div>
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
