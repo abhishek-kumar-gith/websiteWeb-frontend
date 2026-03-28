@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { contactAPI } from '../api/client';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
-export const ContactPage = () => {
+const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -99,41 +99,48 @@ export const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="py-20 bg-gradient-to-br from-slate-800/50 to-slate-900/50"
-      >
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">Get In Touch</h1>
-          <p className="text-xl text-slate-300">
-            Have a question or ready to start your project? We'd love to hear from you.
-          </p>
-        </div>
-      </motion.section>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+      {/* Background effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+      </div>
 
-      {/* Content Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+      {/* Hero Section */}
+      <section className="min-h-auto flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-12 relative">
+        <div className="max-w-6xl w-full">
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-2 sm:mb-4">
+              Get In Touch
+            </h1>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-300 max-w-2xl mx-auto px-2">
+              Have a question or ready to start your project? We'd love to hear from you. Let's create something amazing together.
+            </p>
+          </motion.div>
+
+          {/* Contact Info Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
             {contactInfo.map((info, index) => {
               const Icon = info.icon;
               return (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 text-center"
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2, duration: 0.6 }}
+                  whileHover={{ translateY: -5 }}
+                  className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg sm:rounded-2xl p-6 sm:p-8 text-center hover:border-cyan-500/50 transition-all"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-cyan-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className="w-10 sm:w-14 lg:w-16 h-10 sm:h-14 lg:h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg shadow-cyan-500/30">
+                    <Icon className="w-5 sm:w-6 lg:w-8 h-5 sm:h-6 lg:h-8 text-white" />
                   </div>
-                  <h3 className="font-bold text-white mb-2">{info.label}</h3>
-                  <p className="text-slate-400">{info.value}</p>
+                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-1 sm:mb-2">{info.label}</h3>
+                  <p className="text-xs sm:text-sm lg:text-base text-gray-400">{info.value}</p>
                 </motion.div>
               );
             })}
@@ -141,28 +148,42 @@ export const ContactPage = () => {
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-slate-700 max-w-2xl mx-auto"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 max-w-2xl mx-auto"
           >
-            <h2 className="text-3xl font-bold text-white mb-8">Send us a message</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 sm:mb-8">Send us a message</h2>
 
             {submitStatus === 'success' && (
-              <div className="mb-6 p-4 bg-green-900/20 border border-green-500 rounded-lg text-green-400">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 flex items-center gap-2 text-xs sm:text-sm lg:text-base"
+              >
+                <span>✓</span>
                 Thank you! Your message has been sent successfully.
-              </div>
+              </motion.div>
             )}
 
             {submitStatus?.type === 'error' && (
-              <div className="mb-6 p-4 bg-red-900/20 border border-red-500 rounded-lg text-red-400">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-xs sm:text-sm lg:text-base"
+              >
                 {submitStatus.message}
-              </div>
+              </motion.div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              {/* Name and Email */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
                   <input
                     type="text"
                     name="name"
@@ -170,11 +191,15 @@ export const ContactPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                   />
-                  {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
-                </div>
-                <div>
+                  {errors.name && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.name}</p>}
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
                   <input
                     type="email"
                     name="email"
@@ -182,32 +207,44 @@ export const ContactPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                   />
-                  {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
-                </div>
+                  {errors.email && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.email}</p>}
+                </motion.div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <input
+              {/* Phone and Subject */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                <motion.input
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
                   type="tel"
                   name="phone"
                   placeholder="Phone Number (optional)"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="input-field"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                 />
-                <input
+                <motion.input
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
                   type="text"
                   name="subject"
                   placeholder="Subject (optional)"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="input-field"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                 />
               </div>
 
-              <div>
+              {/* Message */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <textarea
                   name="message"
                   placeholder="Your Message"
@@ -215,19 +252,24 @@ export const ContactPage = () => {
                   onChange={handleChange}
                   required
                   rows="6"
-                  className="input-field resize-none"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
                 />
-                {errors.message && <p className="text-red-400 text-sm mt-1">{errors.message}</p>}
-                <p className="text-slate-400 text-sm mt-1">{formData.message.length}/5000</p>
-              </div>
+                {errors.message && <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.message}</p>}
+                <p className="text-gray-500 text-xs sm:text-sm mt-2">{formData.message.length}/5000</p>
+              </motion.div>
 
+              {/* Submit Button */}
               <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary-500/50 disabled:opacity-50 transition-all duration-300"
+                className="w-full px-6 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-cyan-500/50 text-sm sm:text-base"
               >
+                <Send size={16} className="sm:w-5 sm:h-5" />
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </motion.button>
             </form>
@@ -237,3 +279,5 @@ export const ContactPage = () => {
     </div>
   );
 };
+
+export default ContactPage;
