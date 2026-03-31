@@ -28,7 +28,7 @@ const AdminDashboard = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:5000/api/contacts', {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/contacts`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
       setDeleting(id);
       const token = localStorage.getItem('adminToken');
       
-      await axios.delete(`http://localhost:5000/api/contacts/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/contacts/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
