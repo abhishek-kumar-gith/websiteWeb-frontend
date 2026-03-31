@@ -62,9 +62,13 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white">
-              W
-            </div>
+            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-cyan-500 rounded-lg flex items-center justify-center overflow-hidden">
+  <img
+    src="/WebocoreLogo.png"
+    alt="logo"
+    className="w-full h-full object-contain"
+  />
+</div>
             <span className="font-bold text-xl text-white">Webocore</span>
           </Link>
 

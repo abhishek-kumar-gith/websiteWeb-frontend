@@ -9,8 +9,18 @@ const ContactPage = () => {
     email: '',
     phone: '',
     subject: '',
+    services: [],
     message: '',
   });
+
+  const services = [
+    'Web Development',
+    'Cloud Solutions',
+    'Mobile Development',
+    'Cybersecurity',
+    'IT Consulting',
+    'Business Analytics',
+  ];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -27,6 +37,10 @@ const ContactPage = () => {
       newErrors.email = 'Email is required';
     } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
+    }
+
+    if (!formData.services || formData.services.length === 0) {
+      newErrors.services = 'Please select at least one service';
     }
 
     if (!formData.message.trim()) {
@@ -61,10 +75,31 @@ const ContactPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    if (name === 'services') {
+      // Handle checkbox selection for services
+      setFormData((prev) => {
+        const services = prev.services || [];
+        if (services.includes(value)) {
+          // Remove if already selected
+          return {
+            ...prev,
+            services: services.filter((s) => s !== value),
+          };
+        } else {
+          // Add if not selected
+          return {
+            ...prev,
+            services: [...services, value],
+          };
+        }
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -74,22 +109,36 @@ const ContactPage = () => {
       return;
     }
 
-    console.log("SENDING DATA 🔥:", formData);
+    console.log('🚀 SENDING DATA:', formData);
+    console.log('📋 Services being sent:', formData.services);
+    console.log('📊 Services is array?', Array.isArray(formData.services));
+    
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      await contactAPI.submitForm({
+      const payload = {
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        services: formData.services,
         message: formData.message,
-      });
+      };
+
+      console.log('📤 Final API payload:', JSON.stringify(payload, null, 2));
+      
+      await contactAPI.submitForm(payload);
+      
+      console.log('✅ Form submitted successfully');
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', subject: '', services: [], message: '' });
       setErrors({});
 
       setTimeout(() => setSubmitStatus(null), 3000);
     } catch (error) {
+      console.error('❌ Submission error:', error);
+      console.error('❌ Error response:', error.response?.data);
       const errorMsg = error.response?.data?.message || 'Something went wrong. Please try again.';
       setSubmitStatus({ type: 'error', message: errorMsg });
       setTimeout(() => setSubmitStatus(null), 5000);
@@ -238,6 +287,57 @@ const ContactPage = () => {
                   className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 sm:py-3 text-sm sm:text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
                 />
               </div>
+
+              {/* Service Selection */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <label className="text-sm font-semibold text-gray-300 mb-3 block">
+                  Select Services * <span className="text-red-400">(at least one required)</span>
+                </label>
+                <div className={`bg-white/10 border rounded-lg p-4 sm:p-5 transition-all ${
+                  errors.services ? 'border-red-500/50' : 'border-white/20'
+                }`}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {services.map((service) => (
+                      <label
+                        key={service}
+                        className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-white/5 transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          name="services"
+                          value={service}
+                          checked={formData.services.includes(service)}
+                          onChange={handleChange}
+                          className="w-5 h-5 rounded border-white/40 bg-white/10 text-purple-500 focus:ring-purple-500 cursor-pointer accent-purple-500"
+                        />
+                        <span className="text-sm sm:text-base text-gray-200 group-hover:text-white transition-colors">
+                          {service}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {formData.services.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {formData.services.map((service) => (
+                      <motion.span
+                        key={service}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="inline-block text-xs px-3 py-1.5 bg-purple-500/40 text-purple-200 rounded-full border border-purple-500/30 font-medium"
+                      >
+                        ✓ {service}
+                      </motion.span>
+                    ))}
+                  </div>
+                )}
+                {errors.services && <p className="text-red-400 text-xs sm:text-sm mt-2">{errors.services}</p>}
+              </motion.div>
 
               {/* Message */}
               <motion.div

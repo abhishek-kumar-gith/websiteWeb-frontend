@@ -1,154 +1,79 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
-const AnimatedGradientBox = () => {
+const LaptopTechAnimation = () => {
   return (
-    <motion.div
-      className="w-full h-full flex items-center justify-center relative overflow-hidden"
-    >
-      {/* Outer rotating ring */}
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-        className="absolute inset-0 rounded-2xl"
-        style={{
-          background: 'conic-gradient(from 0deg, #06b6d4, #0ea5e9, #0891b2, #06b6d4)',
-          opacity: 0.3,
-          padding: '2px',
-        }}
-      />
+    <div className="w-full h-[480px] sm:h-[340px] lg:h-[420px] flex items-center justify-center bg-slate-950 rounded-2xl relative overflow-hidden">
 
-      {/* Inner gradient background */}
-      <motion.div
-        animate={{
-          background: [
-            'linear-gradient(45deg, #0f172a, #06b6d4, #0891b2)',
-            'linear-gradient(90deg, #0f172a, #0ea5e9, #06b6d4)',
-            'linear-gradient(135deg, #0f172a, #0891b2, #0ea5e9)',
-            'linear-gradient(180deg, #0f172a, #06b6d4, #0891b2)',
-            'linear-gradient(45deg, #0f172a, #06b6d4, #0891b2)',
-          ],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute inset-0 rounded-2xl opacity-90"
-      />
+      {/* 🌌 Background glow */}
+      <div className="absolute w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 blur-3xl rounded-full"></div>
 
-      {/* Center glow effect */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{ duration: 4, repeat: Infinity }}
-        className="absolute w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-cyan-500/20 rounded-full blur-3xl"
-      />
+      {/* 💻 Laptop */}
+      <div className="relative perspective-[1200px]">
 
-      {/* Floating cube with multiple faces */}
-      <motion.div
-        animate={{ rotateX: 360, rotateY: 360, rotateZ: 180 }}
-        transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-        className="relative z-10 w-24 sm:w-32 lg:w-40 h-24 sm:h-32 lg:h-40"
-        style={{ perspective: '1200px' }}
-      >
-        {/* Cube container */}
-        <div className="relative w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
-          {/* Front face */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg sm:rounded-xl shadow-2xl shadow-cyan-500/50"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'translateZ(48px)',
-            }}
-          >
-            <div className="w-full h-full flex items-center justify-center text-lg sm:text-2xl font-bold text-white/80">
-              ✨
-            </div>
-          </motion.div>
-
-          {/* Back face */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg sm:rounded-xl"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'translateZ(-48px) rotateY(180deg)',
-            }}
-          />
-
-          {/* Right face */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg sm:rounded-xl"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'rotateY(90deg) translateZ(48px)',
-            }}
-          />
-
-          {/* Left face */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg sm:rounded-xl"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'rotateY(-90deg) translateZ(48px)',
-            }}
-          />
-
-          {/* Top face */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-cyan-300 to-blue-400 rounded-lg sm:rounded-xl"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'rotateX(90deg) translateZ(48px)',
-            }}
-          />
-
-          {/* Bottom face */}
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-purple-300 to-pink-400 rounded-lg sm:rounded-xl"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'rotateX(-90deg) translateZ(48px)',
-            }}
-          />
-        </div>
-      </motion.div>
-
-      {/* Orbiting particles */}
-      {[...Array(8)].map((_, i) => (
+        {/* Screen */}
         <motion.div
-          key={i}
-          animate={{
-            x: Math.cos((i / 8) * Math.PI * 2) * 100,
-            y: Math.sin((i / 8) * Math.PI * 2) * 100,
-          }}
-          transition={{
-            duration: 8 + i * 0.3,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute w-2 sm:w-3 h-2 sm:h-3 rounded-full"
-          style={{
-            background: `hsl(${(i / 8) * 360}, 100%, 50%)`,
-            boxShadow: `0 0 20px hsl(${(i / 8) * 360}, 100%, 50%)`,
-            top: '50%',
-            left: '50%',
-            marginTop: '-4px',
-            marginLeft: '-4px',
-          }}
-        />
-      ))}
+          className="relative w-[220px] sm:w-[300px] lg:w-[360px] h-[140px] sm:h-[180px] lg:h-[220px] bg-black rounded-t-xl border border-cyan-500/20 overflow-hidden shadow-2xl"
+          animate={{ rotateX: [0, 5, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        >
 
-      {/* Text overlay */}
+          {/* Top Bar (IDE style) */}
+          <div className="flex items-center gap-2 px-3 py-1 bg-slate-800 text-[10px] text-gray-300">
+            <span className="w-2 h-2 bg-red-400 rounded-full"></span>
+            <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
+            <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+            <span className="ml-2">webocore.js</span>
+          </div>
+
+          {/* Screen Content */}
+          <div className="p-3 text-[10px] sm:text-xs font-mono text-cyan-400 space-y-1">
+
+            {/* 🔁 Moving Webocore */}
+            <motion.div
+              className="whitespace-nowrap text-blue-400 opacity-80"
+              animate={{ x: ["-100%", "120%"] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            >
+              Webocore • Webocore • Webocore •
+            </motion.div>
+
+            {/* Terminal-style lines */}
+            <p>const app = "Webocore";</p>
+            <p>function build() {"{"}</p>
+            <p className="ml-3">return "Scalable Solutions";</p>
+            <p>{"}"}</p>
+
+            {/* Blinking cursor */}
+            <motion.span
+              className="inline-block w-2 h-4 bg-cyan-400 ml-1"
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
+          </div>
+        </motion.div>
+
+        {/* Keyboard */}
+        <div className="w-[260px] sm:w-[340px] lg:w-[420px] h-[16px] sm:h-[20px] bg-slate-800 rounded-b-xl shadow-lg mx-auto relative">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70px] h-[6px] bg-slate-700 rounded"></div>
+        </div>
+      </div>
+
+      {/* Bottom Text */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        className="absolute bottom-8 text-center z-20"
+        className="absolute bottom-3 sm:bottom-4 w-full text-center backdrop-blur-md bg-white/5 py-2 sm:py-3"
       >
-        <p className="text-cyan-300 text-sm font-semibold">NEXT-GEN TECHNOLOGY</p>
-        <p className="text-white/70 text-xs mt-1">Innovate. Build. Scale.</p>
+        <h2 className="text-white text-sm sm:text-lg lg:text-xl font-semibold">
+          Webocore
+        </h2>
+        <p className="text-cyan-400 text-[10px] sm:text-xs mt-1">
+          IT Services & Solutions
+        </p>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
-export default AnimatedGradientBox;
+export default LaptopTechAnimation;
