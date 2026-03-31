@@ -10,8 +10,8 @@
     "lint": "eslint . --ext .js,.jsx"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/drei": "^9.105.3",
+    "@react-three/fiber": "^8.13.5",
     "axios": "^1.5.0",
     "framer-motion": "^10.16.4",
     "lucide-react": "^1.7.0",
