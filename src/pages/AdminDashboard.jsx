@@ -6,7 +6,6 @@ import { LogOut, Trash2 } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('messages');
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,26 +22,23 @@ export const AdminDashboard = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await contactAPI.getAll();
-      setContacts(response.data.data);
-    } catch (error) {
-      console.error('Failed to fetch contacts:', error);
+      const res = await contactAPI.getAll();
+      setContacts(res.data.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      const response = await adminAPI.login(loginData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('admin', JSON.stringify(response.data.admin));
+      const res = await adminAPI.login(loginData);
+      localStorage.setItem('token', res.data.token);
       setIsLoggedIn(true);
-      setLoginData({ email: '', password: '' });
-      setTimeout(() => fetchContacts(), 500);
-    } catch (error) {
-      alert('Login failed: ' + (error.response?.data?.message || 'Unknown error'));
+      fetchContacts();
+    } catch {
+      alert('Login failed');
     } finally {
       setIsLoading(false);
     }
@@ -50,183 +46,109 @@ export const AdminDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('admin');
     setIsLoggedIn(false);
-    setContacts([]);
-    setSelectedContact(null);
     navigate('/');
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this message?')) return;
-
-    try {
-      await contactAPI.delete(id);
-      setContacts(contacts.filter((c) => c._id !== id));
-      setSelectedContact(null);
-    } catch (error) {
-      alert('Delete failed: ' + (error.response?.data?.message || 'Unknown error'));
-    }
+    if (!confirm('Delete message?')) return;
+    await contactAPI.delete(id);
+    setContacts(contacts.filter((c) => c._id !== id));
+    setSelectedContact(null);
   };
 
+  // LOGIN SCREEN
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen pt-20 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-slate-700 max-w-md w-full mx-4"
-        >
-          <h1 className="text-3xl font-bold text-white mb-6 text-center">Admin Login</h1>
-
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="bg-slate-800 p-6 rounded-xl w-full max-w-sm">
+          <h2 className="text-xl text-white mb-4 text-center">Admin Login</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="email"
               placeholder="Email"
               value={loginData.email}
               onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-              required
-              className="input-field"
+              className="w-full p-3 rounded bg-black/30"
             />
             <input
               type="password"
               placeholder="Password"
               value={loginData.password}
               onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-              required
-              className="input-field"
+              className="w-full p-3 rounded bg-black/30"
             />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 transition-all"
-            >
-              {isLoading ? 'Logging in...' : 'Login'}
+            <button className="w-full bg-cyan-500 py-2 rounded">
+              {isLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
-
-          <p className="text-slate-400 text-sm text-center mt-4">
-            Default: admin@webocore.com / admin123
-          </p>
-        </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-7xl mx-auto">
+
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">Admin Dashboard</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+          <h1 className="text-2xl sm:text-4xl text-white font-bold">
+            Admin Dashboard
+          </h1>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-900/20 border border-red-500 text-red-400 rounded-lg hover:bg-red-900/40 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-red-500 rounded"
           >
-            <LogOut size={20} />
-            Logout
+            <LogOut size={18} /> Logout
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-slate-700">
-          <button
-            onClick={() => setActiveTab('messages')}
-            className={`px-4 py-3 font-semibold transition-all ${
-              activeTab === 'messages'
-                ? 'border-b-2 border-primary-500 text-primary-400'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Messages ({contacts.length})
-          </button>
-        </div>
+        {/* Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Content */}
-        {activeTab === 'messages' && (
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Messages List */}
-            <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border border-slate-700 overflow-hidden max-h-[600px] overflow-y-auto">
-                {contacts.length === 0 ? (
-                  <div className="p-6 text-center text-slate-400">
-                    No messages yet
-                  </div>
-                ) : (
-                  <div>
-                    {contacts.map((contact) => (
-                      <motion.div
-                        key={contact._id}
-                        whileHover={{ backgroundColor: 'rgba(30, 41, 59, 0.8)' }}
-                        onClick={() => setSelectedContact(contact)}
-                        className={`p-4 border-b border-slate-700 cursor-pointer transition-all ${
-                          selectedContact?._id === contact._id
-                            ? 'bg-primary-900/30 border-l-2 border-l-primary-500'
-                            : ''
-                        }`}
-                      >
-                        <p className="font-semibold text-white truncate">{contact.name}</p>
-                        <p className="text-sm text-slate-400 truncate">{contact.email}</p>
-                        <p className="text-xs text-slate-500 mt-1">
-                          {new Date(contact.createdAt).toLocaleDateString()}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Message Detail */}
-            <div className="lg:col-span-2">
-              {selectedContact ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-slate-700"
+          {/* LEFT - LIST */}
+          <div className="bg-slate-800 rounded-xl p-4 max-h-[500px] overflow-y-auto">
+            {contacts.length === 0 ? (
+              <p className="text-gray-400 text-center">No messages</p>
+            ) : (
+              contacts.map((c) => (
+                <div
+                  key={c._id}
+                  onClick={() => setSelectedContact(c)}
+                  className="p-3 border-b border-gray-700 cursor-pointer hover:bg-slate-700"
                 >
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <h2 className="text-2xl font-bold text-white">{selectedContact.name}</h2>
-                      <p className="text-slate-400">{selectedContact.email}</p>
-                      {selectedContact.phone && (
-                        <p className="text-slate-400">{selectedContact.phone}</p>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleDelete(selectedContact._id)}
-                      className="p-2 bg-red-900/20 border border-red-500 text-red-400 rounded-lg hover:bg-red-900/40 transition-all"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-
-                  {selectedContact.subject && (
-                    <div className="mb-6">
-                      <label className="text-sm text-slate-400">Subject</label>
-                      <p className="text-white font-semibold">{selectedContact.subject}</p>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="text-sm text-slate-400">Message</label>
-                    <div className="mt-2 p-4 bg-slate-900/50 rounded-lg border border-slate-700">
-                      <p className="text-slate-300 whitespace-pre-wrap">{selectedContact.message}</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 text-xs text-slate-500">
-                    Received on {new Date(selectedContact.createdAt).toLocaleString()}
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-slate-700 text-center text-slate-400">
-                  Select a message to view details
+                  <p className="text-white">{c.name}</p>
+                  <p className="text-sm text-gray-400">{c.email}</p>
                 </div>
-              )}
-            </div>
+              ))
+            )}
           </div>
-        )}
+
+          {/* RIGHT - DETAIL */}
+          <div className="lg:col-span-2 bg-slate-800 rounded-xl p-6">
+            {selectedContact ? (
+              <>
+                <div className="flex justify-between mb-4">
+                  <div>
+                    <h2 className="text-xl text-white">{selectedContact.name}</h2>
+                    <p className="text-gray-400">{selectedContact.email}</p>
+                  </div>
+                  <button onClick={() => handleDelete(selectedContact._id)}>
+                    <Trash2 />
+                  </button>
+                </div>
+
+                <p className="text-gray-300">{selectedContact.message}</p>
+              </>
+            ) : (
+              <p className="text-gray-400 text-center">
+                Select a message
+              </p>
+            )}
+          </div>
+
+        </div>
       </div>
     </div>
   );

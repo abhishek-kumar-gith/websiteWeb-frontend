@@ -66,7 +66,7 @@ const HomePage = () => {
   return (
     <>
       <LoadingScreen isLoading={isLoading} />
-      <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      <div className="min-h-screen bg-slate-950 text-white overflow-visible">
         {/* Animated background */}
         <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -75,10 +75,10 @@ const HomePage = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-12 relative">
-          <div className="max-w-7xl w-full relative">
+        <section className="min-h-screen flex items-center py-20 lg:py-32">
+          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
             {/* Main Hero Content with Left, Center, Right Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center relative">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
               {/* Left Content */}
               <motion.div 
                 variants={containerVariants} 
@@ -154,7 +154,7 @@ const HomePage = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="h-64 sm:h-80 lg:h-96 xl:h-[600px] relative mt-8 lg:mt-0"
+                className="h-auto sm:h-80 lg:h-96 xl:h-[450px] w-full flex justify-center items-start mt-10 sm:mt-14 lg:mt-0"
               >
                 <AnimatedGradientBox />
               </motion.div>
@@ -164,8 +164,8 @@ const HomePage = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-6xl mx-auto">
+        <section className="pt-0 pb-12 sm:pb-16 lg:pb-20 px-4 mt-16 sm:mt-20 lg:mt-24">
+          <div className="max-w-7xl mx-auto">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {stats.map((stat, idx) => (
                 <motion.div
@@ -191,7 +191,7 @@ const HomePage = () => {
 
         {/* Services Section */}
         <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -211,7 +211,7 @@ const HomePage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
             >
               {services.map((service, idx) => {
                 const Icon = service.icon;
@@ -242,7 +242,7 @@ const HomePage = () => {
 
         {/* CTA Section */}
         <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-7xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

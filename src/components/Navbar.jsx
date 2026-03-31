@@ -27,6 +27,15 @@ export const Navbar = () => {
       }
     };
     document.addEventListener('keydown', handleEscape);
+    const [scrolled, setScrolled] = useState(false);
+
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 50);
+  };
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -56,7 +65,11 @@ export const Navbar = () => {
       variants={navVariants}
       initial="hidden"
       animate="visible"
-      className="fixed w-full top-0 z-50 bg-gradient-to-b from-slate-900 via-slate-900 to-transparent backdrop-blur-md border-b border-slate-700/50"
+      className={`fixed top-0 w-full z-50 backdrop-blur-xl border-b transition-all duration-300 ${
+  scrolled
+    ? "bg-slate-900/95 border-slate-700/80 shadow-lg"
+    : "bg-transparent border-transparent"
+}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -102,22 +115,24 @@ export const Navbar = () => {
 
         {/* Mobile Navigation */}
         <motion.div
-          initial={false}
-          animate={isOpen ? 'open' : 'closed'}
-          variants={{
-            open: { height: 'auto', opacity: 1 },
-            closed: { height: 0, opacity: 0 },
-          }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden overflow-hidden"
-        >
+  initial={false}
+  animate={isOpen ? "open" : "closed"}
+  variants={{
+    open: { opacity: 1, y: 0 },
+    closed: { opacity: 0, y: -20 }
+  }}
+  transition={{ duration: 0.3 }}
+  className={`md:hidden fixed top-16 left-0 w-full bg-slate-900/95 backdrop-blur-xl px-6 py-6 space-y-4 border-t border-slate-700/50 ${
+    isOpen ? "block" : "hidden"
+  }`}
+>
           <div className="px-4 py-4 space-y-3 border-t border-slate-700/50">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className="block text-slate-300 hover:text-primary-400 font-medium py-2"
+                className="block text-center text-lg text-slate-300 hover:text-cyan-400 font-medium py-3"
               >
                 {link.name}
               </Link>
@@ -125,7 +140,7 @@ export const Navbar = () => {
             <Link
               to="/admin"
               onClick={() => setIsOpen(false)}
-              className="block w-full px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg text-white text-center font-semibold"
+              className="block w-full px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg text-white text-center font-semibold"
             >
               Admin
             </Link>
