@@ -1,7 +1,7 @@
 import axios from 'axios';
+console.log("API URL:", import.meta.env.VITE_API_BASE_URL); // 👈 YAHI ADD KARNA HA
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
