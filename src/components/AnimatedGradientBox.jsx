@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 
 const LaptopTechAnimation = () => {
   return (
-    <div className="w-full h-[480px] sm:h-[340px] lg:h-[420px] flex items-center justify-center bg-slate-950 rounded-2xl relative overflow-hidden">
+    <div className="w-full flex flex-col items-center justify-center bg-slate-950 rounded-2xl relative overflow-hidden py-10 sm:py-12">
 
       {/* 🌌 Background glow */}
-      <div className="absolute w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-cyan-500/10 blur-3xl rounded-full"></div>
+      <div className="absolute w-[250px] sm:w-[350px] h-[250px] sm:h-[350px] bg-cyan-500/10 blur-3xl rounded-full"></div>
 
       {/* 💻 Laptop */}
-      <div className="relative perspective-[1200px]">
+      <div className="relative perspective-[1200px] z-10">
 
         {/* Screen */}
         <motion.div
@@ -18,7 +18,7 @@ const LaptopTechAnimation = () => {
           transition={{ duration: 6, repeat: Infinity }}
         >
 
-          {/* Top Bar (IDE style) */}
+          {/* Top Bar */}
           <div className="flex items-center gap-2 px-3 py-1 bg-slate-800 text-[10px] text-gray-300">
             <span className="w-2 h-2 bg-red-400 rounded-full"></span>
             <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
@@ -29,7 +29,6 @@ const LaptopTechAnimation = () => {
           {/* Screen Content */}
           <div className="p-3 text-[10px] sm:text-xs font-mono text-cyan-400 space-y-1">
 
-            {/* 🔁 Moving Webocore */}
             <motion.div
               className="whitespace-nowrap text-blue-400 opacity-80"
               animate={{ x: ["-100%", "120%"] }}
@@ -38,13 +37,11 @@ const LaptopTechAnimation = () => {
               Webocore • Webocore • Webocore •
             </motion.div>
 
-            {/* Terminal-style lines */}
             <p>const app = "Webocore";</p>
             <p>function build() {"{"}</p>
             <p className="ml-3">return "Scalable Solutions";</p>
             <p>{"}"}</p>
 
-            {/* Blinking cursor */}
             <motion.span
               className="inline-block w-2 h-4 bg-cyan-400 ml-1"
               animate={{ opacity: [0, 1, 0] }}
@@ -59,11 +56,11 @@ const LaptopTechAnimation = () => {
         </div>
       </div>
 
-      {/* Bottom Text */}
+      {/* ✅ FIXED: Bottom Text (NO ABSOLUTE) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute bottom-3 sm:bottom-4 w-full text-center backdrop-blur-md bg-white/5 py-2 sm:py-3"
+        className="mt-6 sm:mt-8 text-center backdrop-blur-md bg-white/5 px-4 py-2 sm:py-3 rounded-xl"
       >
         <h2 className="text-white text-sm sm:text-lg lg:text-xl font-semibold">
           Webocore

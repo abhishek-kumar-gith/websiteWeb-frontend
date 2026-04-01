@@ -57,28 +57,33 @@ export const AdminDashboard = () => {
     setSelectedContact(null);
   };
 
-  // LOGIN SCREEN
+  // ================= LOGIN =================
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="bg-slate-800 p-6 rounded-xl w-full max-w-sm">
-          <h2 className="text-xl text-white mb-4 text-center">Admin Login</h2>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-slate-900">
+        <div className="bg-slate-800 p-6 sm:p-8 rounded-xl w-full max-w-sm shadow-lg">
+          <h2 className="text-xl sm:text-2xl text-white mb-4 text-center font-semibold">
+            Admin Login
+          </h2>
+
           <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="email"
               placeholder="Email"
               value={loginData.email}
               onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-              className="w-full p-3 rounded bg-black/30"
+              className="w-full p-3 rounded bg-black/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
+
             <input
               type="password"
               placeholder="Password"
               value={loginData.password}
               onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-              className="w-full p-3 rounded bg-black/30"
+              className="w-full p-3 rounded bg-black/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
-            <button className="w-full bg-cyan-500 py-2 rounded">
+
+            <button className="w-full bg-cyan-500 hover:bg-cyan-600 transition py-2 rounded font-semibold">
               {isLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
@@ -87,28 +92,30 @@ export const AdminDashboard = () => {
     );
   }
 
+  // ================= DASHBOARD =================
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-20">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-16 bg-slate-900">
       <div className="max-w-7xl mx-auto">
 
-        {/* Header */}
+        {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-          <h1 className="text-2xl sm:text-4xl text-white font-bold">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold text-center sm:text-left">
             Admin Dashboard
           </h1>
+
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500 rounded"
+            className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 transition rounded text-white"
           >
             <LogOut size={18} /> Logout
           </button>
         </div>
 
-        {/* Layout */}
+        {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* LEFT - LIST */}
-          <div className="bg-slate-800 rounded-xl p-4 max-h-[500px] overflow-y-auto">
+          {/* LEFT - CONTACT LIST */}
+          <div className="bg-slate-800 rounded-xl p-4 h-auto lg:h-[500px] overflow-y-auto">
             {contacts.length === 0 ? (
               <p className="text-gray-400 text-center">No messages</p>
             ) : (
@@ -116,33 +123,49 @@ export const AdminDashboard = () => {
                 <div
                   key={c._id}
                   onClick={() => setSelectedContact(c)}
-                  className="p-3 border-b border-gray-700 cursor-pointer hover:bg-slate-700"
+                  className={`p-3 border-b border-gray-700 cursor-pointer hover:bg-slate-700 transition ${
+                    selectedContact?._id === c._id ? 'bg-slate-700' : ''
+                  }`}
                 >
-                  <p className="text-white">{c.name}</p>
-                  <p className="text-sm text-gray-400">{c.email}</p>
+                  <p className="text-white font-medium text-sm sm:text-base">
+                    {c.name}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-400 truncate">
+                    {c.email}
+                  </p>
                 </div>
               ))
             )}
           </div>
 
-          {/* RIGHT - DETAIL */}
-          <div className="lg:col-span-2 bg-slate-800 rounded-xl p-6">
+          {/* RIGHT - DETAILS */}
+          <div className="lg:col-span-2 bg-slate-800 rounded-xl p-4 sm:p-6 min-h-[200px]">
             {selectedContact ? (
               <>
-                <div className="flex justify-between mb-4">
+                <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
                   <div>
-                    <h2 className="text-xl text-white">{selectedContact.name}</h2>
-                    <p className="text-gray-400">{selectedContact.email}</p>
+                    <h2 className="text-lg sm:text-xl text-white font-semibold">
+                      {selectedContact.name}
+                    </h2>
+                    <p className="text-sm text-gray-400 break-all">
+                      {selectedContact.email}
+                    </p>
                   </div>
-                  <button onClick={() => handleDelete(selectedContact._id)}>
+
+                  <button
+                    onClick={() => handleDelete(selectedContact._id)}
+                    className="self-start sm:self-auto text-red-400 hover:text-red-500"
+                  >
                     <Trash2 />
                   </button>
                 </div>
 
-                <p className="text-gray-300">{selectedContact.message}</p>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed break-words">
+                  {selectedContact.message}
+                </p>
               </>
             ) : (
-              <p className="text-gray-400 text-center">
+              <p className="text-gray-400 text-center mt-10">
                 Select a message
               </p>
             )}
