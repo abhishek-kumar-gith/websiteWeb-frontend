@@ -115,28 +115,66 @@ export const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* LEFT - CONTACT LIST */}
-          <div className="bg-slate-800 rounded-xl p-4 h-auto lg:h-[500px] overflow-y-auto">
-            {contacts.length === 0 ? (
-              <p className="text-gray-400 text-center">No messages</p>
-            ) : (
-              contacts.map((c) => (
-                <div
-                  key={c._id}
-                  onClick={() => setSelectedContact(c)}
-                  className={`p-3 border-b border-gray-700 cursor-pointer hover:bg-slate-700 transition ${
-                    selectedContact?._id === c._id ? 'bg-slate-700' : ''
-                  }`}
-                >
-                  <p className="text-white font-medium text-sm sm:text-base">
-                    {c.name}
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-400 truncate">
-                    {c.email}
-                  </p>
-                </div>
-              ))
-            )}
+         <div className="bg-slate-800 rounded-xl p-4 h-auto lg:h-[500px] overflow-y-auto space-y-4">
+
+  {contacts.length === 0 ? (
+    <p className="text-gray-400 text-center">No messages</p>
+  ) : (
+    contacts.map((c) => (
+      <div
+        key={c._id}
+        className="bg-slate-700/40 border border-white/10 rounded-xl p-4 space-y-4"
+      >
+
+        {/* TOP */}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+
+          {/* LEFT */}
+          <div>
+            <h3 className="text-white font-semibold text-sm sm:text-base">
+              {c.name}
+            </h3>
+
+            <p className="text-gray-400 text-xs sm:text-sm break-all">
+              {c.email}
+            </p>
           </div>
+
+          {/* RIGHT */}
+          <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+            <button
+              onClick={() => handleDelete(c._id)}
+              className="flex items-center gap-1 px-3 py-1.5 text-xs sm:text-sm border border-red-500 text-red-400 rounded hover:bg-red-500/10 transition"
+            >
+              <Trash2 size={14} /> Delete
+            </button>
+          </div>
+        </div>
+
+        {/* SERVICES */}
+        <div className="flex flex-wrap gap-2">
+          {c.services?.map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] sm:text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full"
+            >
+              ✓ {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* MESSAGE */}
+        <div className="border-t border-white/10 pt-3">
+          <p className="text-gray-300 text-xs sm:text-sm break-words">
+            "{c.message}"
+          </p>
+        </div>
+
+      </div>
+    ))
+  )}
+
+</div>
 
           {/* RIGHT - DETAILS */}
           <div className="lg:col-span-2 bg-slate-800 rounded-xl p-4 sm:p-6 min-h-[200px]">
