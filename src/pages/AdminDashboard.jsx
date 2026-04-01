@@ -125,29 +125,41 @@ export const AdminDashboard = () => {
               >
 
                 {/* TOP */}
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 w-full">
 
-                  {/* LEFT */}
-                  <div>
-                    <h3 className="text-white font-semibold text-sm sm:text-base">
-                      {c.name}
-                    </h3>
+  {/* LEFT */}
+  <div className="flex-1 min-w-0">
+    <div className="flex items-center gap-2 flex-wrap">
+      <h3 className="text-white font-semibold text-sm sm:text-base">
+        {c.name}
+      </h3>
 
-                    <p className="text-gray-400 text-xs sm:text-sm break-all">
-                      {c.email}
-                    </p>
-                  </div>
+      <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded">
+        New
+      </span>
+    </div>
 
-                  {/* RIGHT */}
-                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
-                    <button
-                      onClick={() => handleDelete(c._id)}
-                      className="flex items-center gap-1 px-3 py-1.5 text-xs sm:text-sm border border-red-500 text-red-400 rounded hover:bg-red-500/10 transition"
-                    >
-                      <Trash2 size={14} /> Delete
-                    </button>
-                  </div>
-                </div>
+    <p className="text-gray-400 text-xs sm:text-sm break-all">
+      {c.email}
+    </p>
+  </div>
+
+  {/* RIGHT */}
+  <div className="flex flex-wrap items-center gap-2 sm:gap-3 sm:justify-end w-full sm:w-auto">
+
+    <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
+      Apr 1, 2026, 09:40 AM
+    </span>
+
+    <button
+      onClick={() => handleDelete(c._id)}
+      className="flex items-center gap-1 px-2 sm:px-3 py-1 text-xs sm:text-sm shrink-0 border border-red-500 text-red-400 rounded hover:bg-red-500/10 transition"
+    >
+      <Trash2 size={14} /> Delete
+    </button>
+
+  </div>
+</div>
 
                 {/* SERVICES */}
                 <div className="flex flex-wrap gap-2">
