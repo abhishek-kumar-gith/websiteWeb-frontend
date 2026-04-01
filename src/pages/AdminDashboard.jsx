@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { adminAPI, contactAPI } from '../api/client';
 import { LogOut, Trash2 } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
-  const [selectedContact, setSelectedContact] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +52,6 @@ export const AdminDashboard = () => {
     if (!confirm('Delete message?')) return;
     await contactAPI.delete(id);
     setContacts(contacts.filter((c) => c._id !== id));
-    setSelectedContact(null);
   };
 
   // ================= LOGIN =================
@@ -71,7 +68,9 @@ export const AdminDashboard = () => {
               type="email"
               placeholder="Email"
               value={loginData.email}
-              onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, email: e.target.value })
+              }
               className="w-full p-3 rounded bg-black/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
 
@@ -79,7 +78,9 @@ export const AdminDashboard = () => {
               type="password"
               placeholder="Password"
               value={loginData.password}
-              onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
               className="w-full p-3 rounded bg-black/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
 
@@ -95,12 +96,12 @@ export const AdminDashboard = () => {
   // ================= DASHBOARD =================
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-16 bg-slate-900">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
 
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold text-center sm:text-left">
-            Admin Dashboard
+            Messages from Contact Form
           </h1>
 
           <button
@@ -111,103 +112,65 @@ export const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* CARD LIST */}
+        <div className="space-y-6">
 
-          {/* LEFT - CONTACT LIST */}
-         <div className="bg-slate-800 rounded-xl p-4 h-auto lg:h-[500px] overflow-y-auto space-y-4">
+          {contacts.length === 0 ? (
+            <p className="text-gray-400 text-center">No messages</p>
+          ) : (
+            contacts.map((c) => (
+              <div
+                key={c._id}
+                className="bg-slate-800/60 border border-white/10 rounded-2xl p-4 sm:p-5 space-y-4 backdrop-blur-md"
+              >
 
-  {contacts.length === 0 ? (
-    <p className="text-gray-400 text-center">No messages</p>
-  ) : (
-    contacts.map((c) => (
-      <div
-        key={c._id}
-        className="bg-slate-700/40 border border-white/10 rounded-xl p-4 space-y-4"
-      >
+                {/* TOP */}
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
 
-        {/* TOP */}
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
-
-          {/* LEFT */}
-          <div>
-            <h3 className="text-white font-semibold text-sm sm:text-base">
-              {c.name}
-            </h3>
-
-            <p className="text-gray-400 text-xs sm:text-sm break-all">
-              {c.email}
-            </p>
-          </div>
-
-          {/* RIGHT */}
-          <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
-            <button
-              onClick={() => handleDelete(c._id)}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs sm:text-sm border border-red-500 text-red-400 rounded hover:bg-red-500/10 transition"
-            >
-              <Trash2 size={14} /> Delete
-            </button>
-          </div>
-        </div>
-
-        {/* SERVICES */}
-        <div className="flex flex-wrap gap-2">
-          {c.services?.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] sm:text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full"
-            >
-              ✓ {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* MESSAGE */}
-        <div className="border-t border-white/10 pt-3">
-          <p className="text-gray-300 text-xs sm:text-sm break-words">
-            "{c.message}"
-          </p>
-        </div>
-
-      </div>
-    ))
-  )}
-
-</div>
-
-          {/* RIGHT - DETAILS */}
-          <div className="lg:col-span-2 bg-slate-800 rounded-xl p-4 sm:p-6 min-h-[200px]">
-            {selectedContact ? (
-              <>
-                <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+                  {/* LEFT */}
                   <div>
-                    <h2 className="text-lg sm:text-xl text-white font-semibold">
-                      {selectedContact.name}
-                    </h2>
-                    <p className="text-sm text-gray-400 break-all">
-                      {selectedContact.email}
+                    <h3 className="text-white font-semibold text-sm sm:text-base">
+                      {c.name}
+                    </h3>
+
+                    <p className="text-gray-400 text-xs sm:text-sm break-all">
+                      {c.email}
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => handleDelete(selectedContact._id)}
-                    className="self-start sm:self-auto text-red-400 hover:text-red-500"
-                  >
-                    <Trash2 />
-                  </button>
+                  {/* RIGHT */}
+                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+                    <button
+                      onClick={() => handleDelete(c._id)}
+                      className="flex items-center gap-1 px-3 py-1.5 text-xs sm:text-sm border border-red-500 text-red-400 rounded hover:bg-red-500/10 transition"
+                    >
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
                 </div>
 
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed break-words">
-                  {selectedContact.message}
-                </p>
-              </>
-            ) : (
-              <p className="text-gray-400 text-center mt-10">
-                Select a message
-              </p>
-            )}
-          </div>
+                {/* SERVICES */}
+                <div className="flex flex-wrap gap-2">
+                  {c.services?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] sm:text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full"
+                    >
+                      ✓ {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* MESSAGE */}
+                <div className="border-t border-white/10 pt-3">
+                  <p className="text-gray-300 text-xs sm:text-sm break-words">
+                    "{c.message}"
+                  </p>
+                </div>
+
+              </div>
+            ))
+          )}
 
         </div>
       </div>
